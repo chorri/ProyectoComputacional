@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Header.h"
+
 namespace Proyecto_Computacional {
 
 	using namespace System;
@@ -15,12 +17,21 @@ namespace Proyecto_Computacional {
 	public ref class MyForm : public System::Windows::Forms::Form
 	{
 	public:
+		Graphics^ mainGraphics;
+
+		ImagenTrabajo^ img;
+
+
+
+
 		MyForm(void)
 		{
 			InitializeComponent();
 			//
 			//TODO: agregar código de constructor aquí
 			//
+			img = gcnew ImagenTrabajo("Test.png", this->ClientRectangle);
+			mainGraphics = this->CreateGraphics();
 		}
 
 	protected:
@@ -33,13 +44,18 @@ namespace Proyecto_Computacional {
 			{
 				delete components;
 			}
+
+			delete img;
 		}
+	private: System::Windows::Forms::Timer^  timer1;
+	protected:
+	private: System::ComponentModel::IContainer^  components;
 
 	private:
 		/// <summary>
 		/// Variable del diseñador necesaria.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -48,12 +64,41 @@ namespace Proyecto_Computacional {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->components = gcnew System::ComponentModel::Container();
-			this->Size = System::Drawing::Size(300,300);
-			this->Text = L"MyForm";
-			this->Padding = System::Windows::Forms::Padding(0);
+			this->components = (gcnew System::ComponentModel::Container());
+			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
+			this->SuspendLayout();
+			// 
+			// timer1
+			// 
+			this->timer1->Enabled = true;
+			this->timer1->Interval = 1000;
+			this->timer1->Tick += gcnew System::EventHandler(this, &MyForm::TimerUpdate);
+			// 
+			// MyForm
+			// 
+			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->ClientSize = System::Drawing::Size(284, 261);
+			this->Name = L"MyForm";
+			this->Text = L"MyForm";
+			this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MyForm::GetKeyDown);
+			this->ResumeLayout(false);
+
 		}
 #pragma endregion
+	private: System::Void TimerUpdate(System::Object^  sender, System::EventArgs^  e) {
+		img->DibujarImagen(this->mainGraphics);
+	}
+	private: System::Void GetKeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+
+		switch (e->KeyCode)
+		{
+		case Keys::Q:
+			img->FiltroDeMedia();
+			break;
+		default:
+			break;
+		}
+	}
 	};
 }
