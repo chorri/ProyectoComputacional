@@ -96,6 +96,9 @@ namespace Proyecto_Computacional {
 		case Keys::Q:
 			img->FiltroDeMedia();
 			break;
+		case Keys::W:
+			img->FiltroDeLaMediana();
+			break;
 		default:
 			break;
 		}
